@@ -279,28 +279,33 @@ class MyPromise {
    */
   static any(proms) {
     return new MyPromise((resolve, reject) => {
-      const result = [];
-      let count = 0;
-      let rejected = 0;
-      let isResolve = false;
-      for (const item of proms) {
-        let i = count;
-        count++;
-        MyPromise.resolve(item).then((data) => {
-          if (!isResolve) {
-            isResolve = true;
-            resolve(data);
-          }
-        }, (reason) => {
-          rejected++;
-          result[i] = reason;
-          if (count === rejected) {
-            reject(result)
-          }
-        })
-      }
-      if (count === 0) {
-        reject(result);
+      try {
+        const result = [];
+        let count = 0;
+        let rejected = 0;
+        let isResolve = false;
+        for (const item of proms) {
+          let i = count;
+          count++;
+          MyPromise.resolve(item).then((data) => {
+            if (!isResolve) {
+              isResolve = true;
+              resolve(data);
+            }
+          }, (reason) => {
+            rejected++;
+            result[i] = reason;
+            if (count === rejected) {
+              reject(result)
+            }
+          })
+        }
+        if (count === 0) {
+          reject(result);
+        }
+      } catch (err) {
+        reject(err);
+        console.error(err)
       }
     })
   }
@@ -357,13 +362,16 @@ class MyPromise {
 
 
 // const promises = [
-//     Promise.reject('ERROR A'),
-//     Promise.reject('ERROR B'),
-//     Promise.reject('result'),
+//   Promise.reject('ERROR A'),
+//   Promise.reject('ERROR B'),
+//   Promise.reject('result'),
+//   1,
+//   null
 // ]
 
-// Promise.any(promises).then((value) => {
-//     console.log('value: ', value)
+// 如果传入的不是一个迭代器，报错，比如传入 null
+// MyPromise.any(promises).then((value) => {
+//   console.log('value: ', value)
 // }).catch((err) => {
-//     console.log('err: ', err)
+//   console.log('err: ', err)
 // })
