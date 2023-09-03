@@ -9,9 +9,21 @@ async function async2() {
 
 console.log('script start');
 
+requestAnimationFrame(function () {
+  console.log('requestAnimationFrame1')
+})
+
 setTimeout(function () {
   console.log('setTimeout');
 }, 0);
+
+requestAnimationFrame(function () {
+  console.log('requestAnimationFrame2')
+})
+
+requestAnimationFrame(function () {
+  console.log('requestAnimationFrame3')
+})
 
 async1();
 
